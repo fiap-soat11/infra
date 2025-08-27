@@ -18,9 +18,12 @@ module "eks" {
   principalArn = var.principalArn
   nodeGroup    = var.nodeGroup
   instanceType = var.instanceType
-  aws_subnets = [ module.vpc.aws_subnet.eks1,
-                  module.vpc.aws_subnet.eks2,
-                  module.vpc.aws_subnet.eks3 ]
+  vpc_id       = module.vpc.vpc_id
+  aws_subnets = [
+    module.vpc.aws_subnet_eks1,
+    module.vpc.aws_subnet_eks2,
+    module.vpc.aws_subnet_eks3
+  ]
 }
 
 #module "api_gateway" {

@@ -1,7 +1,7 @@
 resource "aws_security_group" "sg" {
   name        = "SG-${var.projectName}"
   description = "fiap-soat11"
-  vpc_id      = ""
+  vpc_id      = var.vpc_id
 
   # Inbound
   ingress {
@@ -28,8 +28,9 @@ resource "aws_eks_cluster" "eks-cluster" {
 
   vpc_config {
     #subnet_ids         = [for subnet in vpc.aws_subnet.eks : subnet.id if subnet.availability_zone != "${var.regionDefault}e"]
-    subnet_ids         = [for subnet in var.aws_subnets : subnet.id]
+    #subnet_ids         = [for subnet in var.aws_subnets : subnet.id]
     #subnet_ids         = [module.vpc.aws_subnet.eks1.id, module.vpc.aws_subnet.eks2.id, module.vpc.aws_subnet.eks3.id]
+    subnet_ids = var.aws_subnets
     security_group_ids = [aws_security_group.sg.id]
   }
 
@@ -42,7 +43,7 @@ resource "aws_eks_node_group" "eks-node" {
   cluster_name    = aws_eks_cluster.eks-cluster.name
   node_group_name = var.nodeGroup
   node_role_arn   = var.labRole
-  subnet_ids      = [for subnet in data.aws_subnet.subnet : subnet.id if subnet.availability_zone != "${var.regionDefault}e"]
+  subnet_ids      = var.aws_subnets
   disk_size       = 50
   instance_types  = [var.instanceType]
 

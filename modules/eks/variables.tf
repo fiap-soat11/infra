@@ -30,9 +30,10 @@ variable "instanceType" {
   type = string
 }
 
+variable "vpc_id" {
+  type = string
+}
+
 variable "aws_subnets" {
-  type = list(object({
-    vpc_id     = string
-    cidr_block = string
-  }))
+  type = list(string)
 }
