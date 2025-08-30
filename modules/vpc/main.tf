@@ -16,19 +16,19 @@ resource "aws_subnet" "database" {
 }
 
 resource "aws_subnet" "eks1" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.3.0/24"
-
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = "${var.regionDefault}a"
 }
 
 resource "aws_subnet" "eks2" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.4.0/24"
-
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.4.0/24"
+  availability_zone = "${var.regionDefault}b"
 }
 
 resource "aws_subnet" "eks3" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.5.0/24"
-
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = "${var.regionDefault}c"
 }

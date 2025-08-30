@@ -1,5 +1,6 @@
 module "vpc" {
   source = "./modules/vpc"
+  regionDefault = var.regionDefault
 }
 
 #module "lambda" {

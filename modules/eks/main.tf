@@ -3,13 +3,39 @@ resource "aws_security_group" "sg" {
   description = "fiap-soat11"
   vpc_id      = var.vpc_id
 
-  # Inbound
+
+  # Inbound - HTTP
   ingress {
     description = "HTTP"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Inbound - HTTPS
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Inbound - Comunicação interna entre nodes
+  ingress {
+    description = "Node to Node communication"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    self        = true
+  }
+  ingress {
+    description = "Node to Node communication (UDP)"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    self        = true
   }
 
   # Outbound
