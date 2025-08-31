@@ -53,9 +53,6 @@ resource "aws_eks_cluster" "eks-cluster" {
   role_arn = var.labRole
 
   vpc_config {
-    #subnet_ids         = [for subnet in vpc.aws_subnet.eks : subnet.id if subnet.availability_zone != "${var.regionDefault}e"]
-    #subnet_ids         = [for subnet in var.aws_subnets : subnet.id]
-    #subnet_ids         = [module.vpc.aws_subnet.eks1.id, module.vpc.aws_subnet.eks2.id, module.vpc.aws_subnet.eks3.id]
     subnet_ids = var.aws_subnets
     security_group_ids = [aws_security_group.sg.id]
   }
@@ -63,6 +60,21 @@ resource "aws_eks_cluster" "eks-cluster" {
   access_config {
     authentication_mode = var.accessConfig
   }
+}
+resource "aws_eks_access_policy_association" "eks-access-policy" {
+  cluster_name  = aws_eks_cluster.eks-cluster.name
+  policy_arn    = var.policyArn
+  principal_arn = var.principalArn
+
+  access_scope {
+    type = "cluster"
+  }
+}
+resource "aws_eks_access_entry" "eks-access-entry" {
+  cluster_name      = aws_eks_cluster.eks-cluster.name
+  principal_arn     = var.principalArn
+  kubernetes_groups = ["fiap"]
+  type              = "STANDARD"
 }
 
 resource "aws_eks_node_group" "eks-node" {
@@ -82,21 +94,4 @@ resource "aws_eks_node_group" "eks-node" {
   update_config {
     max_unavailable = 1
   }
-}
-
-resource "aws_eks_access_policy_association" "eks-access-policy" {
-  cluster_name  = aws_eks_cluster.eks-cluster.name
-  policy_arn    = var.policyArn
-  principal_arn = var.principalArn
-
-  access_scope {
-    type = "cluster"
-  }
-}
-
-resource "aws_eks_access_entry" "eks-access-entry" {
-  cluster_name      = aws_eks_cluster.eks-cluster.name
-  principal_arn     = var.principalArn
-  kubernetes_groups = ["fiap"]
-  type              = "STANDARD"
 }

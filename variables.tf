@@ -1,3 +1,7 @@
+
+variable "id"{
+  default = "180626685002"
+}
 variable "regionDefault" {
   default = "us-east-1"
 }
