@@ -1,4 +1,4 @@
-resource "aws_api_gateway_rest_api" "fiap-api-gateway" {
+resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
   body = jsonencode({
     openapi = "3.0.1"
     info = {
@@ -21,6 +21,7 @@ resource "aws_api_gateway_rest_api" "fiap-api-gateway" {
           x-amazon-apigateway-integration = {
             httpMethod           = "ANY"
             type                 = "HTTP_PROXY"
+            # Usa a variável passada pelo Actions
             uri                  = "http://${var.dns_eks}/{proxy}"
             payloadFormatVersion = "1.0"
           }
@@ -36,11 +37,11 @@ resource "aws_api_gateway_rest_api" "fiap-api-gateway" {
   }
 }
 
-resource "aws_api_gateway_deployment" "fiap-api-gateway-deployment" {
-  rest_api_id = aws_api_gateway_rest_api.fiap-api-gateway.id
+resource "aws_api_gateway_deployment" "fiap_api_gateway_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.fiap_api_gateway.id
 
   triggers = {
-    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.fiap-api-gateway.body))
+    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.fiap_api_gateway.body))
   }
 
   lifecycle {
@@ -48,8 +49,8 @@ resource "aws_api_gateway_deployment" "fiap-api-gateway-deployment" {
   }
 }
 
-resource "aws_api_gateway_stage" "fiap-api-gateway-stage" {
-  deployment_id = aws_api_gateway_deployment.fiap-api-gateway-deployment.id
-  rest_api_id   = aws_api_gateway_rest_api.fiap-api-gateway.id
+resource "aws_api_gateway_stage" "fiap_api_gateway_stage" {
+  deployment_id = aws_api_gateway_deployment.fiap_api_gateway_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.fiap_api_gateway.id
   stage_name    = "fiap-api-gateway-stage"
 }

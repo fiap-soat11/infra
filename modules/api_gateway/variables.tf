@@ -3,5 +3,6 @@ variable "uri_lambda" {
 }
 
 variable "dns_eks" {
+  description = "DNS do LoadBalancer do Service no EKS"
   type        = string
 }

@@ -95,3 +95,24 @@ resource "aws_eks_node_group" "eks-node" {
     max_unavailable = 1
   }
 }
+
+resource "kubernetes_service" "fiap_svc" {
+  metadata {
+    name      = "fiap-svc"
+    namespace = "fiap-soat11"
+  }
+
+  spec {
+    selector = {
+      app = "fiap-deployment"
+    }
+
+    port {
+      protocol    = "TCP"
+      port        = 80
+      target_port = 8080
+    }
+
+    type = "LoadBalancer"
+  }
+}

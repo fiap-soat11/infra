@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: fiap-deployment
-          image: adinaildoribeiro/fiap-soat11:v2
+          image: __AWS_IMAGE_CONTAINER__
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

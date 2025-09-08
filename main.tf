@@ -1,17 +1,20 @@
-#module "lambda" {
-#  source        = "./modules/lambda"
-#  ami           = "ami-123456"
-#  instance_type = "t2.micro"
-#}
+module "lambda" {
+  source        = "./modules/lambda"
+  name = "fiap-lambda"
+  labRole      = "arn:aws:iam::${var.id}:role/LabRole"
+  image_uri   = module.ecr.repository_url
+  package_type = "Image"
+  
+}
 
 module "eks" {
   source        = "./modules/eks"
   projectName   = var.projectName
   regionDefault = var.regionDefault
-  labRole      = var.labRole
+  labRole      = "arn:aws:iam::${var.id}:role/LabRole"
   accessConfig = var.accessConfig
   policyArn    = var.policyArn
-  principalArn = var.principalArn
+  principalArn = "arn:aws:iam::${var.id}:role/voclabs"
   nodeGroup    = var.nodeGroup
   instanceType = var.instanceType
   vpc_id       = data.aws_vpc.vpc.id

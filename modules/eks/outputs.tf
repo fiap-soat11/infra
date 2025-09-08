@@ -1,3 +1,3 @@
 output "dns_eks" {
-  value = aws_lb.eks_lb.dns_name
+  value = kubernetes_service.fiap_svc.status[0].load_balancer[0].ingress[0].hostname  
 }
