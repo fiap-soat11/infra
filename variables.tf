@@ -9,10 +9,6 @@ variable "projectName" {
   default = "EKS-FIAP"
 }
 
-variable "labRole" {
-  default = "arn:aws:iam::180626685002:role/LabRole"
-}
-
 variable "accessConfig" {
   default = "API_AND_CONFIG_MAP"
 }
@@ -25,10 +21,10 @@ variable "instanceType" {
   default = "t3.medium"
 }
 
-variable "principalArn" {
-  default = "arn:aws:iam::180626685002:role/voclabs"
-}
-
 variable "policyArn" {
   default = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+}
+
+variable "image_uri" {
+  default = "180626685002.dkr.ecr.us-east-1.amazonaws.com/fiap-lambda@sha256:ff5673c87b712777e5c1b68d1ccc59e81ec2b074efae954305c3a28130d37313"  
 }

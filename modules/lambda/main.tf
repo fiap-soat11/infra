@@ -15,3 +15,8 @@ resource "aws_lambda_function" "fiap-lambda" {
 
   architectures = ["x86_64"]
 }
+
+resource "aws_lambda_function_url" "fiap-lambda-url" {
+  function_name      = aws_lambda_function.fiap-lambda.function_name
+  authorization_type = "NONE"
+}

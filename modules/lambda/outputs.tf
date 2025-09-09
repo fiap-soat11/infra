@@ -1,3 +1,3 @@
 output "uri_lambda" {
-  value = aws_lambda_function.your_lambda.arn  
+  value = aws_lambda_function_url.fiap-lambda-url.function_url
 }
