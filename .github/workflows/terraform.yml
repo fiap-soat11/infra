@@ -7,8 +7,6 @@ jobs:
       steps:
           - name: Baixando arquivos do repo
             uses: actions/checkout@v4
-          - name: Configurando Terraform
-            uses: hashicorp/setup-terraform@v3
           - name: Aws Credentials
             uses: aws-actions/configure-aws-credentials@v4
             with:
@@ -18,8 +16,10 @@ jobs:
               aws-region: ${{ vars.AWS_REGION }}  
           - name: Credentials
             run: aws sts get-caller-identity
+          - name: Configurando Terraform
+            uses: hashicorp/setup-terraform@v3
           - name: Terraform Init
-            run: terraform init
+            run: terraform init -input=false
           - name: Terraform Format
             run: terraform fmt -check
           - name: Terraform Validate
@@ -27,9 +27,9 @@ jobs:
           #- name: Terraform Plan
           #  run: terraform plan -target=module.lambda -target=module.eks -out=tfplan
           - name: Terraform Apply Lambda              
-            run: terraform apply -target=module.lambda -auto-approve
+            run: terraform apply -target=module.lambda -input=false -auto-approve
           - name: Terraform Apply EKS              
-            run: terraform apply -target=module.eks -auto-approve
+            run: terraform apply -target=module.eks -input=false -auto-approve
     K8S_Deploy:
       needs: Lambda_and_EKS
       runs-on: ubuntu-latest
