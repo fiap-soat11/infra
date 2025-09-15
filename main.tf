@@ -2,7 +2,7 @@ module "lambda" {
   source        = "./modules/lambda"
   name = "fiap-lambda"
   labRole      = "arn:aws:iam::${var.id}:role/LabRole"
-  image_uri   = "${var.id}.dkr.ecr.${var.regionDefault}.amazonaws.com/fiap-lambda@sha256:ff5673c87b712777e5c1b68d1ccc59e81ec2b074efae954305c3a28130d37313"
+  image_uri   = "${var.id}.dkr.ecr.${var.regionDefault}.amazonaws.com/fiap-lambda:latest"
   package_type = "Image"
   
 }
@@ -23,7 +23,10 @@ module "eks" {
 
 module "api_gateway" {
   source = "./modules/api_gateway"
-  uri_lambda = module.lambda.uri_lambda
+  id = var.id
+  uri_lambda = data.aws_lambda_function.fiap-lambda.arn
+  function_name = data.aws_lambda_function.fiap-lambda.function_name
+  regionDefault = var.regionDefault
   dns_eks   = ""
 }
 
