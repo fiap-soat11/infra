@@ -16,16 +16,20 @@ jobs:
               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
               aws-region: ${{ vars.AWS_REGION }}  
+          - name: Credentials
+            run: aws sts get-caller-identity
           - name: Terraform Init
             run: terraform init
           - name: Terraform Format
             run: terraform fmt -check
           - name: Terraform Validate
             run: terraform validate
-          - name: Terraform Plan
-            run: terraform plan -target=module.lambda -target=module.eks -out=tfplan
-          - name: Terraform Apply              
-            run: terraform apply -target=module.lambda -target=module.eks -auto-approve tfplan
+          #- name: Terraform Plan
+          #  run: terraform plan -target=module.lambda -target=module.eks -out=tfplan
+          - name: Terraform Apply Lambda              
+            run: terraform apply -target=module.lambda -auto-approve
+          - name: Terraform Apply EKS              
+            run: terraform apply -target=module.eks -auto-approve
     K8S_Deploy:
       needs: Lambda_and_EKS
       runs-on: ubuntu-latest
