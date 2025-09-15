@@ -18,6 +18,8 @@ jobs:
             run: aws sts get-caller-identity
           - name: Configurando Terraform
             uses: hashicorp/setup-terraform@v3
+          - name: Ativar Debug Terraform
+            run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
           - name: Terraform Init
             run: terraform init -input=false
           - name: Terraform Format
