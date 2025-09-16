@@ -27,6 +27,6 @@ module "api_gateway" {
   uri_lambda    = data.aws_lambda_function.fiap-lambda.arn
   function_name = data.aws_lambda_function.fiap-lambda.function_name
   regionDefault = var.regionDefault
-  dns_eks       = ""
+  dns_eks       = var.dns_eks
 }
 
