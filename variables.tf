@@ -30,5 +30,5 @@ variable "image_uri" {
 }
 
 variable "dns_eks" {
-  type = string  
+  type = string
 }
