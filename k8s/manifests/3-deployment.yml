@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: fiap-deployment
-          image: 180626685002.dkr.ecr.us-east-1.amazonaws.com/fiap-api
+          image: __AWS_ACCOUNT_ID__.dkr.ecr.us-east-1.amazonaws.com/fiap-api
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -1,4 +1,4 @@
-name: Destruir Terraform AWS
+name: Destruir Infraestrutura AWS
 on:
     workflow_dispatch:
 jobs:
