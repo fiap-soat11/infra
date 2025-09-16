@@ -19,17 +19,17 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
           }
         }
       }
-      #"/eks/{proxy+}" = {
-      #  "x-amazon-apigateway-any-method" = {
-      #    x-amazon-apigateway-integration = {
-      #      httpMethod           = "ANY"
-      #      type                 = "HTTP_PROXY"
-      #      # Usa a variável passada pelo Actions
-      #      uri                  = "http://${var.dns_eks}/{proxy}"
-      #      payloadFormatVersion = "1.0"
-      #    }
-      #  }
-      #}
+      "/eks/{proxy+}" = {
+        "x-amazon-apigateway-any-method" = {
+          x-amazon-apigateway-integration = {
+            httpMethod           = "ANY"
+            type                 = "HTTP_PROXY"
+            # Usa a variável passada pelo Actions
+            uri                  = "http://${var.dns_eks}/{proxy}"
+            payloadFormatVersion = "1.0"
+          }
+        }
+      }
     }
   })
 
