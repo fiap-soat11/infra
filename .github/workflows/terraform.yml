@@ -66,7 +66,7 @@ jobs:
           id: get_lb
           run: |
             LB=$(kubectl get svc fiap-svc -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-            echo "SERVICE_LB=$LB" >> $GITHUB_ENV
+            echo "::set-output name=lb::$LB"
     Api_Gateway:
       #needs: [Lambda_and_EKS, K8S_Deploy]
       needs: K8S_Deploy
