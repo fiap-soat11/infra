@@ -20,6 +20,16 @@ jobs:
             uses: hashicorp/setup-terraform@v3
           - name: Ativar Debug Terraform
             run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
+          - name: Carregar Kube Config
+            run: |
+              aws eks update-kubeconfig \
+              --name ${{ vars.CLUSTER_NAME }} \
+              --region ${{ vars.AWS_REGION }}                
+          - name: Get Service LB
+            id: get_lb
+            run: |
+              LB=$(kubectl get svc fiap-svc -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+              echo "::set-output name=lb::$LB"
           - name: Terraform Init
             run: terraform init -input=false
           - name: Terraform Format
@@ -27,4 +37,4 @@ jobs:
           - name: Terraform Validate
             run: terraform validate
           - name: Terraform Destroy
-            run: terraform destroy -auto-approve
+            run: terraform destroy -var="dns_eks=${{ steps.get_lb.outputs.lb }}" -auto-approve
