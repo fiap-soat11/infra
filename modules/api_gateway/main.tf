@@ -24,9 +24,14 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
           x-amazon-apigateway-integration = {
             httpMethod           = "ANY"
             type                 = "HTTP_PROXY"
-            # Usa a variável passada pelo Actions
             uri                  = "http://${var.dns_eks}/{proxy}"
             payloadFormatVersion = "1.0"
+            requestParameters = {
+              "integration.request.path.proxy" = "method.request.path.proxy"
+            }
+          }
+          requestParameters = {
+            "method.request.path.proxy" = true
           }
         }
       }

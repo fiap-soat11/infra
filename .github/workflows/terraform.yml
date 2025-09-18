@@ -65,8 +65,19 @@ jobs:
         - name: Get Service LB
           id: get_lb
           run: |
-            LB=$(kubectl get svc fiap-svc -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-            echo "::set-output name=lb::$LB"
+              for i in {1..10}; do
+                LB=$(kubectl get svc fiap-svc -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+                if [ -n "$LB" ] && [ "$LB" != "<none>" ]; then
+                  echo "LoadBalancer hostname found: $LB"
+                  echo "::set-output name=lb::$LB"
+                  exit 0
+                else
+                  echo "Attempt $i: LoadBalancer hostname not available yet. Retrying in 30 seconds..."
+                  sleep 30
+                fi
+              done
+              echo "Failed to get LoadBalancer hostname after 10 attempts."
+              exit 1
     Api_Gateway:
       needs: [Lambda_and_EKS, K8S_Deploy]
       runs-on: ubuntu-latest
