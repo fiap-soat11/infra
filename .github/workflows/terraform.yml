@@ -14,24 +14,22 @@ jobs:
               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
               aws-region: ${{ vars.AWS_REGION }}  
-          - name: Credentials
-            run: aws sts get-caller-identity
           - name: Configurando Terraform
             uses: hashicorp/setup-terraform@v3
-          - name: Ativar Debug Terraform
-            run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
           - name: Terraform Init
             run: terraform init -input=false
           - name: Terraform Format
             run: terraform fmt -check
           - name: Terraform Validate
             run: terraform validate
-          #- name: Terraform Plan
-          #  run: terraform plan -target=module.lambda -target=module.eks -out=tfplan
           - name: Terraform Apply Lambda              
-            run: terraform apply -target=module.lambda -input=false -auto-approve
+            run: terraform apply -target=module.lambda -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
+          - name: Terraform Apply Login              
+            run: terraform apply -target=module.login -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
+          - name: Terraform Apply Auth              
+            run: terraform apply -target=module.auth -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
           - name: Terraform Apply EKS              
-            run: terraform apply -target=module.eks -input=false -auto-approve
+            run: terraform apply -target=module.eks -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
     K8S_Deploy:
       needs: Lambda_and_EKS
       outputs:
@@ -48,6 +46,7 @@ jobs:
             files: './k8s/manifests/*.yml'    
           env:
             AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+            CONNECTION_STRING: ${{ vars.CONNECTION_STRING }}
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v4
           with:
@@ -65,8 +64,19 @@ jobs:
         - name: Get Service LB
           id: get_lb
           run: |
-            LB=$(kubectl get svc fiap-svc -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-            echo "::set-output name=lb::$LB"
+              for i in {1..10}; do
+                LB=$(kubectl get svc fiap-svc -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+                if [ -n "$LB" ] && [ "$LB" != "<none>" ]; then
+                  echo "LoadBalancer hostname found: $LB"
+                  echo "::set-output name=lb::$LB"
+                  exit 0
+                else
+                  echo "Attempt $i: LoadBalancer hostname not available yet. Retrying in 30 seconds..."
+                  sleep 30
+                fi
+              done
+              echo "Failed to get LoadBalancer hostname after 10 attempts."
+              exit 1
     Api_Gateway:
       needs: [Lambda_and_EKS, K8S_Deploy]
       runs-on: ubuntu-latest
@@ -88,7 +98,5 @@ jobs:
             run: terraform fmt -check
           - name: Terraform Validate
             run: terraform validate
-          #- name: Terraform Plan
-          #  run: terraform plan -target=module.api_gateway -out=tfplan
           - name: Terraform Apply
             run: terraform apply -target=module.api_gateway -var="dns_eks=${{ needs.K8S_Deploy.outputs.lb }}" -auto-approve
