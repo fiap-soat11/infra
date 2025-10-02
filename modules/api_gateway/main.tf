@@ -9,9 +9,35 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
       "/lambda" = {
         get = {
           x-amazon-apigateway-integration = {
+            httpMethod           = "GET"
+            type                 = "AWS"
+            uri                  = "arn:aws:apigateway:${var.regionDefault}:lambda:path/2015-03-31/functions/${var.fiap_lambda.arn}/invocations"
+            requestTemplates     = {
+              "application/json" = "{\"statusCode\": 200}"
+            }
+            payloadFormatVersion = "1.0"
+          }
+        }
+      }
+      "/login" = {
+        post = {
+          x-amazon-apigateway-integration = {
             httpMethod           = "POST"
             type                 = "AWS"
-            uri                  = "arn:aws:apigateway:${var.regionDefault}:lambda:path/2015-03-31/functions/${var.uri_lambda}/invocations"
+            uri                  = "arn:aws:apigateway:${var.regionDefault}:lambda:path/2015-03-31/functions/${var.fiap_login.arn}/invocations"
+            requestTemplates     = {
+              "application/json" = "{\"statusCode\": 200}"
+            }
+            payloadFormatVersion = "1.0"
+          }
+        }
+      }
+      "/auth" = {
+        get = {
+          x-amazon-apigateway-integration = {
+            httpMethod           = "GET"
+            type                 = "AWS"
+            uri                  = "arn:aws:apigateway:${var.regionDefault}:lambda:path/2015-03-31/functions/${var.fiap_auth.arn}/invocations"
             requestTemplates     = {
               "application/json" = "{\"statusCode\": 200}"
             }
@@ -63,11 +89,26 @@ resource "aws_api_gateway_stage" "fiap_api_gateway_stage" {
   stage_name    = "fiap-api-gateway-stage"
 }
 
-resource "aws_lambda_permission" "allow_apigw" {
+resource "aws_lambda_permission" "allow_apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = var.function_name
+  function_name = var.fiap_lambda.function_name
   principal     = "apigateway.amazonaws.com"
-  #source_arn    = "arn:aws:execute-api:${var.regionDefault}:${var.id}:${aws_api_gateway_rest_api.fiap_api_gateway.id}/*/*/lambda"
   source_arn    = "${aws_api_gateway_rest_api.fiap_api_gateway.execution_arn}/*/*/lambda"
+}
+
+resource "aws_lambda_permission" "allow_apigw_login" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = var.fiap_login.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.fiap_api_gateway.execution_arn}/*/*/login"
+}
+
+resource "aws_lambda_permission" "allow_apigw_auth" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = var.fiap_auth.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.fiap_api_gateway.execution_arn}/*/*/auth"
 }

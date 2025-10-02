@@ -23,9 +23,13 @@ jobs:
           - name: Terraform Validate
             run: terraform validate
           - name: Terraform Apply Lambda              
-            run: terraform apply -target=module.lambda -input=false -auto-approve
+            run: terraform apply -target=module.lambda -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
+          - name: Terraform Apply Login              
+            run: terraform apply -target=module.login -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
+          - name: Terraform Apply Auth              
+            run: terraform apply -target=module.auth -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
           - name: Terraform Apply EKS              
-            run: terraform apply -target=module.eks -input=false -auto-approve
+            run: terraform apply -target=module.eks -var="id=${{ vars.AWS_ACCOUNT_ID}}" -auto-approve
     K8S_Deploy:
       needs: Lambda_and_EKS
       outputs:

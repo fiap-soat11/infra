@@ -17,7 +17,33 @@ data "aws_subnet" "subnet" {
 data "aws_lambda_function" "fiap-lambda" {
   function_name = "fiap-lambda"
 }
+data "aws_lambda_function" "fiap-auth" {
+  function_name = "fiap-auth"
+}
+data "aws_lambda_function" "fiap-login" {
+  function_name = "fiap-login"
+}
 
-data "aws_lambda_function_url" "fiap_lambda_url" {
-  function_name = data.aws_lambda_function.fiap-lambda.function_name
+
+locals {
+  fiap_lambda_config = {
+    name          = data.aws_lambda_function.fiap-lambda.function_name
+    function_name = data.aws_lambda_function.fiap-lambda.function_name
+    arn           = data.aws_lambda_function.fiap-lambda.arn
+    invoke_arn    = data.aws_lambda_function.fiap-lambda.invoke_arn
+  }
+
+  fiap_auth_config = {
+    name          = data.aws_lambda_function.fiap-auth.function_name
+    function_name = data.aws_lambda_function.fiap-auth.function_name
+    arn           = data.aws_lambda_function.fiap-auth.arn
+    invoke_arn    = data.aws_lambda_function.fiap-auth.invoke_arn
+  }
+
+  fiap_login_config = {
+    name          = data.aws_lambda_function.fiap-login.function_name
+    function_name = data.aws_lambda_function.fiap-login.function_name
+    arn           = data.aws_lambda_function.fiap-login.arn
+    invoke_arn    = data.aws_lambda_function.fiap-login.invoke_arn
+  }
 }
