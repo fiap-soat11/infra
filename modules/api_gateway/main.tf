@@ -19,7 +19,7 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
           }
         }
       }
-      "/login" = {
+     "/login" = {
         post = {
           x-amazon-apigateway-integration = {
             httpMethod           = "POST"
@@ -29,6 +29,21 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
               "application/json" = "{\"statusCode\": 200}"
             }
             payloadFormatVersion = "1.0"
+            
+            responses = {
+              default = {
+                statusCode = "200"
+                responseTemplates = {
+                  "application/json" = ""
+                }
+              }
+            }
+          }
+          
+          responses = {
+            "200" = {
+              description = "Retorna o token JWT"
+            }
           }
         }
       }
