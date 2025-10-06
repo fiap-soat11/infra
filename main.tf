@@ -1,6 +1,6 @@
 module "lambda" {
   source       = "./modules/lambda"
-  name         = "fiap-lambda"
+  name         = "users_service_lambda"
   labRole      = "arn:aws:iam::${var.id}:role/LabRole"
   image_uri    = "${var.id}.dkr.ecr.${var.regionDefault}.amazonaws.com/fiap-lambda:latest"
   package_type = "Image"
@@ -9,7 +9,7 @@ module "lambda" {
 
 module "auth" {
   source       = "./modules/lambda"
-  name         = "fiap-auth"
+  name         = "users_service_authorizer"
   labRole      = "arn:aws:iam::${var.id}:role/LabRole"
   image_uri    = "${var.id}.dkr.ecr.${var.regionDefault}.amazonaws.com/fiap-auth:latest"
   package_type = "Image"
@@ -18,7 +18,7 @@ module "auth" {
 
 module "login" {
   source       = "./modules/lambda"
-  name         = "fiap-login"
+  name         = "users_service_login"
   labRole      = "arn:aws:iam::${var.id}:role/LabRole"
   image_uri    = "${var.id}.dkr.ecr.${var.regionDefault}.amazonaws.com/fiap-login:latest"
   package_type = "Image"
