@@ -14,36 +14,36 @@ data "aws_subnet" "subnet" {
   id       = each.value
 }
 
-data "aws_lambda_function" "fiap-lambda" {
-  function_name = "fiap-lambda"
+data "aws_lambda_function" "users_service_lambda" {
+  function_name = "users_service_lambda"
 }
-data "aws_lambda_function" "fiap-auth" {
-  function_name = "fiap-auth"
+data "aws_lambda_function" "users_service_authorizer" {
+  function_name = "users_service_authorizer"
 }
-data "aws_lambda_function" "fiap-login" {
-  function_name = "fiap-login"
+data "aws_lambda_function" "users_service_login" {
+  function_name = "users_service_login"
 }
 
 
 locals {
   fiap_lambda_config = {
-    name          = data.aws_lambda_function.fiap-lambda.function_name
-    function_name = data.aws_lambda_function.fiap-lambda.function_name
-    arn           = data.aws_lambda_function.fiap-lambda.arn
-    invoke_arn    = data.aws_lambda_function.fiap-lambda.invoke_arn
+    name          = data.aws_lambda_function.users_service_lambda.function_name
+    function_name = data.aws_lambda_function.users_service_lambda.function_name
+    arn           = data.aws_lambda_function.users_service_lambda.arn
+    invoke_arn    = data.aws_lambda_function.users_service_lambda.invoke_arn
   }
 
   fiap_auth_config = {
-    name          = data.aws_lambda_function.fiap-auth.function_name
-    function_name = data.aws_lambda_function.fiap-auth.function_name
-    arn           = data.aws_lambda_function.fiap-auth.arn
-    invoke_arn    = data.aws_lambda_function.fiap-auth.invoke_arn
+    name          = data.aws_lambda_function.users_service_authorizer.function_name
+    function_name = data.aws_lambda_function.users_service_authorizer.function_name
+    arn           = data.aws_lambda_function.users_service_authorizer.arn
+    invoke_arn    = data.aws_lambda_function.users_service_authorizer.invoke_arn
   }
 
   fiap_login_config = {
-    name          = data.aws_lambda_function.fiap-login.function_name
-    function_name = data.aws_lambda_function.fiap-login.function_name
-    arn           = data.aws_lambda_function.fiap-login.arn
-    invoke_arn    = data.aws_lambda_function.fiap-login.invoke_arn
+    name          = data.aws_lambda_function.users_service_login.function_name
+    function_name = data.aws_lambda_function.users_service_login.function_name
+    arn           = data.aws_lambda_function.users_service_login.arn
+    invoke_arn    = data.aws_lambda_function.users_service_login.invoke_arn
   }
 }

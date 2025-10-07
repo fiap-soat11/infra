@@ -37,16 +37,7 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout Repo
-          uses: actions/checkout@v4
-        - name: Tokenizar artefatos
-          uses: cschleiden/replace-tokens@v1
-          with:
-            tokenPrefix: '__'
-            tokenSuffix: '__'
-            files: './k8s/manifests/*.yml'    
-          env:
-            AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
-            CONNECTION_STRING: ${{ vars.CONNECTION_STRING }}
+          uses: actions/checkout@v4       
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v4
           with:
