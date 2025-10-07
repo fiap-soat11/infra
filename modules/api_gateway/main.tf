@@ -13,7 +13,7 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
             type                 = "AWS"
             uri                  = "arn:aws:apigateway:${var.regionDefault}:lambda:path/2015-03-31/functions/${var.fiap_lambda.arn}/invocations"
             requestTemplates     = {
-              "application/json" = "{\"statusCode\": 200}"
+               "application/json" = "$input.body"
             }
             payloadFormatVersion = "1.0"
           }
@@ -26,7 +26,7 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
             type                 = "AWS"
             uri                  = "arn:aws:apigateway:${var.regionDefault}:lambda:path/2015-03-31/functions/${var.fiap_login.arn}/invocations"
             requestTemplates     = {
-              "application/json" = "{\"statusCode\": 200}"
+               "application/json" = "$input.body"
             }
             payloadFormatVersion = "1.0"
             
@@ -54,7 +54,7 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
             type                 = "AWS"
             uri                  = "arn:aws:apigateway:${var.regionDefault}:lambda:path/2015-03-31/functions/${var.fiap_auth.arn}/invocations"
             requestTemplates     = {
-              "application/json" = "{\"statusCode\": 200}"
+               "application/json" = "$input.body"
             }
             payloadFormatVersion = "1.0"
           }
