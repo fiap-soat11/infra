@@ -2,7 +2,15 @@ variable "name" {
   type = string
 }
 
-variable "protocol_type" {
+variable "package_type" {
   type    = string
-  default = "HTTP"
+  default = "Image"
+}
+
+variable "labRole" {
+  type = string
+}
+
+variable "image_uri" {
+  type = string
 }
