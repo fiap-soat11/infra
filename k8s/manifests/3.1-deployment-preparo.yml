@@ -16,6 +16,7 @@ spec:
       containers:
         - name: fiap-deployment-preparo
           image: __AWS_ACCOUNT_ID__.dkr.ecr.us-east-1.amazonaws.com/fiap-preparo
+          #image: adinaildoribeiro/fiap-preparo:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

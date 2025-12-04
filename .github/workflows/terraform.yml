@@ -33,7 +33,9 @@ jobs:
     K8S_Deploy:
       needs: Lambda_and_EKS
       outputs:
-        lb: ${{ steps.get_lb.outputs.lb }}
+        lb_pagamento: ${{ steps.get_lb_pagamento.outputs.lb_pagamento }}
+        lb_pedido: ${{ steps.get_lb_pedido.outputs.lb_pedido }}
+        lb_preparo: ${{ steps.get_lb_preparo.outputs.lb_preparo }}
       runs-on: ubuntu-latest
       steps:
         - name: Checkout Repo
@@ -60,14 +62,51 @@ jobs:
             --region ${{ vars.AWS_REGION }}      
         - name: Aplicar Configurações no EKS
           run: kubectl apply -f ./k8s/manifests
-        - name: Get Service LB
-          id: get_lb
+        - name: Aguardar Deployments
+          run: |
+            kubectl rollout status deployment/fiap-deployment -n fiap-soat11 --timeout=180s
+            kubectl rollout status deployment/login-deployment -n fiap-soat11 --timeout=180s
+            kubectl rollout status deployment/auth-deployment -n fiap-soat11 --timeout=180s
+        - name: Get Service LB Pedido
+          id: get_lb_pedido
           run: |
               for i in {1..10}; do
-                LB=$(kubectl get svc fiap-svc -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+                LB=$(kubectl get svc fiap-svc-pedido -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
                 if [ -n "$LB" ] && [ "$LB" != "<none>" ]; then
                   echo "LoadBalancer hostname found: $LB"
-                  echo "::set-output name=lb::$LB"
+                  echo "::set-output name=lb_pedido::$LB"
+                  exit 0
+                else
+                  echo "Attempt $i: LoadBalancer hostname not available yet. Retrying in 30 seconds..."
+                  sleep 30
+                fi
+              done
+              echo "Failed to get LoadBalancer hostname after 10 attempts."
+              exit 1
+        - name: Get Service LB Pagamento
+          id: get_lb_pagamento
+          run: |
+              for i in {1..10}; do
+                LB=$(kubectl get svc fiap-svc-pagamento -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+                if [ -n "$LB" ] && [ "$LB" != "<none>" ]; then
+                  echo "LoadBalancer hostname found: $LB"
+                  echo "::set-output name=lb_pagamento::$LB"
+                  exit 0
+                else
+                  echo "Attempt $i: LoadBalancer hostname not available yet. Retrying in 30 seconds..."
+                  sleep 30
+                fi
+              done
+              echo "Failed to get LoadBalancer hostname after 10 attempts."
+              exit 1
+        - name: Get Service LB Preparo
+          id: get_lb_preparo
+          run: |
+              for i in {1..10}; do
+                LB=$(kubectl get svc fiap-svc-preparo -n fiap-soat11 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+                if [ -n "$LB" ] && [ "$LB" != "<none>" ]; then
+                  echo "LoadBalancer hostname found: $LB"
+                  echo "::set-output name=lb_preparo::$LB"
                   exit 0
                 else
                   echo "Attempt $i: LoadBalancer hostname not available yet. Retrying in 30 seconds..."
