@@ -137,4 +137,4 @@ jobs:
           - name: Terraform Validate
             run: terraform validate
           - name: Terraform Apply
-            run: terraform apply -target=module.api_gateway -var="dns_eks=${{ needs.K8S_Deploy.outputs.lb }}" -auto-approve
+            run: terraform apply -target=module.api_gateway -var="dns_eks_pedido=${{ needs.K8S_Deploy.outputs.lb_pedido }}" -var="dns_eks_pagamento=${{ needs.K8S_Deploy.outputs.lb_pagamento }}" -var="dns_eks_preparo=${{ needs.K8S_Deploy.outputs.lb_preparo }}" -auto-approve

@@ -55,5 +55,7 @@ module "api_gateway" {
   fiap_auth     = local.fiap_auth_config
   fiap_login    = local.fiap_login_config
   regionDefault = var.regionDefault
-  dns_eks       = var.dns_eks
+  dns_eks_pedido = var.dns_eks_pedido
+  dns_eks_pagamento = var.dns_eks_pagamento
+  dns_eks_preparo = var.dns_eks_preparo
 }
