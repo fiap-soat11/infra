@@ -33,6 +33,20 @@ spec:
                 secretKeyRef:
                   name: fiap-db-secret-preparo
                   key: ConnectionStrings__DefaultConnection
+            - name: RabbitMQ__Host
+              value: "rabbitmq.fiap-soat11.svc.cluster.local"
+            - name: RabbitMQ__Port
+              value: "5672"
+            - name: RabbitMQ__Username
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: rabbitmq-username
+            - name: RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: rabbitmq-password
           livenessProbe:
             httpGet:
               path: /api/Health
