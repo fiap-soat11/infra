@@ -60,12 +60,44 @@ resource "aws_api_gateway_rest_api" "fiap_api_gateway" {
           }
         }
       }
-      "/eks/{proxy+}" = {
+      "/eks/pedido/{proxy+}" = {
         "x-amazon-apigateway-any-method" = {
           x-amazon-apigateway-integration = {
             httpMethod           = "ANY"
             type                 = "HTTP_PROXY"
-            uri                  = "http://${var.dns_eks}/{proxy}"
+            uri                  = "http://${var.dns_eks_pedido}/{proxy}"
+            payloadFormatVersion = "1.0"
+            requestParameters = {
+              "integration.request.path.proxy" = "method.request.path.proxy"
+            }
+          }
+          requestParameters = {
+            "method.request.path.proxy" = true
+          }
+        }
+      }
+      "/eks/pagamento/{proxy+}" = {
+        "x-amazon-apigateway-any-method" = {
+          x-amazon-apigateway-integration = {
+            httpMethod           = "ANY"
+            type                 = "HTTP_PROXY"
+            uri                  = "http://${var.dns_eks_pagamento}/{proxy}"
+            payloadFormatVersion = "1.0"
+            requestParameters = {
+              "integration.request.path.proxy" = "method.request.path.proxy"
+            }
+          }
+          requestParameters = {
+            "method.request.path.proxy" = true
+          }
+        }
+      }
+      "/eks/preparo/{proxy+}" = {
+        "x-amazon-apigateway-any-method" = {
+          x-amazon-apigateway-integration = {
+            httpMethod           = "ANY"
+            type                 = "HTTP_PROXY"
+            uri                  = "http://${var.dns_eks_preparo}/{proxy}"
             payloadFormatVersion = "1.0"
             requestParameters = {
               "integration.request.path.proxy" = "method.request.path.proxy"

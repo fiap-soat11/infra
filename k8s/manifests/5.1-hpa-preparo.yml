@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: fiap-hpa
+  name: fiap-hpa-preparo
   namespace: fiap-soat11
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: fiap-deployment
+    name: fiap-deployment-preparo
   minReplicas: 2
   maxReplicas: 10
   behavior:

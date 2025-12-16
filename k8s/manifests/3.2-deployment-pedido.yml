@@ -1,21 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fiap-deployment
+  name: fiap-deployment-pedido
   namespace: fiap-soat11
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: fiap-deployment
+      app: fiap-deployment-pedido
   template:
     metadata:
       labels:
-        app: fiap-deployment
+        app: fiap-deployment-pedido
     spec:
       containers:
-        - name: fiap-deployment
-          image: __AWS_ACCOUNT_ID__.dkr.ecr.us-east-1.amazonaws.com/fiap-webapi
+        - name: fiap-deployment-pedido
+          image: __AWS_ACCOUNT_ID__.dkr.ecr.us-east-1.amazonaws.com/fiap-pedido
+          #image: adinaildoribeiro/fiap-pedido:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -27,21 +28,25 @@ spec:
               cpu: "250m"
               memory: "256Mi"
           env:
-            - name: MercadoPago__NotificationUrl
-              valueFrom:
-                configMapKeyRef:
-                  name: fiap-configmap
-                  key: MercadoPago__NotificationUrl
             - name: ConnectionStrings__DefaultConnection
               valueFrom:
                 secretKeyRef:
-                  name: fiap-db-secret
+                  name: fiap-db-secret-pedido
                   key: ConnectionStrings__DefaultConnection
-            - name: MercadoPago__AccessToken
+            - name: RabbitMQ__Host
+              value: "rabbitmq.fiap-soat11.svc.cluster.local"
+            - name: RabbitMQ__Port
+              value: "5672"
+            - name: RabbitMQ__Username
               valueFrom:
                 secretKeyRef:
-                  name: fiap-mp-secret
-                  key: MercadoPago__AccessToken
+                  name: rabbitmq-secret
+                  key: rabbitmq-username
+            - name: RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: rabbitmq-password
           livenessProbe:
             httpGet:
               path: /api/Health
