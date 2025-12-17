@@ -38,4 +38,4 @@ jobs:
           - name: Terraform Validate
             run: terraform validate
           - name: Terraform Destroy
-            run: terraform destroy -var="dns_eks=${{ steps.get_lb.outputs.lb }}" -auto-approve
+            run: terraform destroy -var="dns_eks_pedido=${{ steps.get_lb.outputs.lb_pedido }}" -var="dns_eks_pagamento=${{ steps.get_lb.outputs.lb_pagamento }}" -var="dns_eks_preparo=${{ steps.get_lb.outputs.lb_preparo }}" -auto-approve
