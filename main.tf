@@ -49,13 +49,13 @@ module "eks" {
 //}
 
 module "api_gateway" {
-  source        = "./modules/api_gateway"
-  id            = var.id
-  fiap_lambda   = local.fiap_lambda_config
-  fiap_auth     = local.fiap_auth_config
-  fiap_login    = local.fiap_login_config
-  regionDefault = var.regionDefault
-  dns_eks_pedido = var.dns_eks_pedido
+  source            = "./modules/api_gateway"
+  id                = var.id
+  fiap_lambda       = local.fiap_lambda_config
+  fiap_auth         = local.fiap_auth_config
+  fiap_login        = local.fiap_login_config
+  regionDefault     = var.regionDefault
+  dns_eks_pedido    = var.dns_eks_pedido
   dns_eks_pagamento = var.dns_eks_pagamento
-  dns_eks_preparo = var.dns_eks_preparo
+  dns_eks_preparo   = var.dns_eks_preparo
 }
